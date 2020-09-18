@@ -4,7 +4,12 @@ using System;
 namespace receiver.Utils
 
 {
-    public class DataValidator
+    public interface IDataValidator
+    {
+        bool ValidateReceivedData(string receivedData, ref EnvironmentData environmentData);
+    }
+
+    public class DataValidator : IDataValidator
     {
 
         public bool ValidateReceivedData(string receivedData, ref EnvironmentData environmentData)
@@ -19,19 +24,18 @@ namespace receiver.Utils
                 {
                     environmentData.Temperature = double.Parse(environmentDataString[0]);
                     environmentData.Humidity = double.Parse(environmentDataString[1]);
-                    Console.WriteLine(environmentData);
                     isValid = true;
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Exception: "+e.Message+"\n");
+                    Console.WriteLine("Exception occurred with the message: " + e.Message);
                     isValid = false;
                 }
 
             }
             else
             {
-                Console.WriteLine("File Does not exist\n");
+                Console.WriteLine("File Does not exist");
             }
 
             return isValid;

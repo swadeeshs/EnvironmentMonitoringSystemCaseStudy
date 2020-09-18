@@ -2,41 +2,74 @@
 using receiver.Data;
 using receiver.Utils;
 
+
 namespace receiver
 {
      static class Program
     {
-        private static readonly DataReceiver DataReceiver;
-        private static readonly DataValidator DataValidator;
-        private static readonly RangeChecker RangeChecker;
-        private static readonly Logger Logger;
-        
-
-        static Program()
+        static void Main()
         {
-            DataReceiver = new DataReceiver();          
-            DataValidator = new DataValidator();
-            RangeChecker = new RangeChecker();
-            Logger = new Logger();
+            Receiver receiver = new Receiver();
 
-        }
-         static void Main()
-        {
             string receivedData;
+            
             var environmentData = new EnvironmentData();
-            while ((receivedData = DataReceiver.ReceiveViaConsole()) != null)
+            
+            while ((receivedData = receiver.ReceiveViaConsole()) != null)
             {
-                var isValid = DataValidator.ValidateReceivedData(receivedData, ref environmentData);
+                var isValid = receiver.ValidateReceivedData(receivedData, ref environmentData);
                 if (!isValid) continue;
+                Console.WriteLine(receivedData);
                 var temperatureStatusCode =
-                    RangeChecker.CheckTemperatureAndReturnStatusCode(environmentData.Temperature);
-                var humidityStatusCode = RangeChecker.CheckHumidityAndReturnStatusCode(environmentData.Humidity);
+                    receiver.CheckTemperatureAndReturnStatusCode(environmentData.Temperature);
+                var humidityStatusCode = receiver.CheckHumidityAndReturnStatusCode(environmentData.Humidity);
                  var prefixMessage = "Temperature: ";
-                Logger.LoggingToConsole( temperatureStatusCode, ref prefixMessage);
+                 receiver.LoggingToConsole( temperatureStatusCode, ref prefixMessage);
                 prefixMessage = "Humidity: ";
-                Logger.LoggingToConsole( humidityStatusCode, ref prefixMessage);
+                receiver.LoggingToConsole( humidityStatusCode, ref prefixMessage);
                 Console.WriteLine();
             }
         }
     }
+
+    public class Receiver : IDataReceiver, IDataValidator, ILogger, IRangeChecker
+    {
+        private static DataReceiver _dataReceiver;
+        private static DataValidator _dataValidator;
+        private static RangeChecker _rangeChecker;
+        private static Logger _logger;
+
+        public Receiver()
+        {
+            _dataReceiver = new DataReceiver();
+            _dataValidator = new DataValidator();
+            _rangeChecker = new RangeChecker();
+            _logger = new Logger();
+        }
+
+        public string ReceiveViaConsole()
+        {
+            return (_dataReceiver.ReceiveViaConsole());
+        }
+
+        public bool ValidateReceivedData(string receivedData, ref EnvironmentData environmentData)
+        {
+            return _dataValidator.ValidateReceivedData(receivedData, ref environmentData);
+        }
+        public void LoggingToConsole(int statusCode, ref string message)
+        {
+            _logger.LoggingToConsole(statusCode, ref message);
+        }
+
+        public int CheckTemperatureAndReturnStatusCode(double temperature)
+        {
+            return _rangeChecker.CheckTemperatureAndReturnStatusCode(temperature);
+        }
+
+        public int CheckHumidityAndReturnStatusCode(double humidity)
+        {
+            return _rangeChecker.CheckHumidityAndReturnStatusCode(humidity);
+        }
+    }
+
 }

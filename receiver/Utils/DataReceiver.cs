@@ -2,9 +2,14 @@
 
 namespace receiver.Utils
 {
-    internal class DataReceiver
+    public interface IDataReceiver
     {
-        internal string ReceiveViaConsole()
+        string ReceiveViaConsole();
+    }
+
+    public class DataReceiver : IDataReceiver
+    {
+        public string ReceiveViaConsole()
         {
             return Console.ReadLine();
         }

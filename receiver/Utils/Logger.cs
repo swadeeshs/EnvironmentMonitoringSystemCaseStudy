@@ -2,7 +2,12 @@
 
 namespace receiver.Utils
 {
-    public class Logger
+    public interface ILogger
+    {
+        void LoggingToConsole(int statusCode, ref string message);
+    }
+
+    public class Logger : ILogger
     {
         public void LoggingToConsole(int statusCode, ref string message)
         {
@@ -10,12 +15,12 @@ namespace receiver.Utils
                 message += "OK";
             else
             {
-                message = PrintNonOkStatusCode(statusCode, ref message);
+                message = CheckNonOkStatusCode(statusCode, ref message);
             }
             Console.WriteLine(message);
         }
 
-        private static string PrintNonOkStatusCode(int statusCode, ref string message)
+        private static string CheckNonOkStatusCode(int statusCode, ref string message)
         {
             switch (statusCode)
             {

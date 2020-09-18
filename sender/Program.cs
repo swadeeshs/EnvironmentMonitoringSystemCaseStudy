@@ -1,4 +1,5 @@
-﻿using sender.Utils;
+﻿using System;
+using sender.Utils;
 using System.Threading;
 
 namespace sender
@@ -16,7 +17,7 @@ namespace sender
         {
             var dataToSend = FileReader.ReadCsv(SenderConstants.CsvFilePath);
 
-            if (dataToSend.Count.Equals(0))
+            if (dataToSend == null || dataToSend.Count.Equals(0))
             {
                 return;
             }

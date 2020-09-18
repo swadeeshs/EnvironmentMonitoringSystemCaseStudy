@@ -1,6 +1,12 @@
 ﻿namespace receiver.Utils
 {
-    public class RangeChecker
+    public interface IRangeChecker
+    {
+        int CheckTemperatureAndReturnStatusCode(double temperature);
+        int CheckHumidityAndReturnStatusCode(double humidity);
+    }
+
+    public class RangeChecker : IRangeChecker
     {
         public int CheckTemperatureAndReturnStatusCode(double temperature)
         {
