@@ -21,4 +21,4 @@ jobs:
         run: jb dupfinder EnvironmentMonitoringSystem.sln /output=dupreport.xml
        
       - name: Check Reports
-        run: powershell ./resharper.ps1
+        run: powershell PsScripts/resharper.ps1
